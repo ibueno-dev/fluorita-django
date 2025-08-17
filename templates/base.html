@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Fluorita{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <nav style="background-color: #f2f2f2; padding: 10px; margin-bottom: 20px;">
+            <a href="{% url 'loja:home' %}">Página Inicial</a> |
+            <a href="{% url 'loja:lista_produtos' %}">Produtos</a> |
+            <a href="{% url 'loja:sobre' %}">Sobre</a>
+            <a href="{% url 'loja:detalhe_carrinho' %}">Ver Carrinho</a>
+
+            <span style="float: right;">
+                {% if user.is_authenticated %}
+                    Olá, {{ user.username }}!|
+                    <a href="{% url 'loja:perfil' %}">Meu Perfil</a> |
+                    <a href="{% url 'loja:meus_pedidos' %}">Meus Pedidos</a> |
+                    <a href="{% url 'loja:lista_enderecos' %}">Meus Endereços</a>
+                    <form action="{% url 'loja:logout' %}" method="POST" style="display: inline; margin-left: 10px;">
+                        {% csrf_token %}
+                        <button type="submit">Sair</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'loja:login' %}">Entrar</a> |
+                    <a href="{% url 'loja:cadastro' %}">Cadastrar</a>
+                {% endif %}
+            </span>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

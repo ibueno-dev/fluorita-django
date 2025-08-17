@@ -1,0 +1,29 @@
+{% extends 'loja/base.html' %}
+
+{% block title %}Nossos Produtos - Fluorita{% endblock %}
+
+{% block content %}
+    <h1>Nosso Menu de Produtos</h1>
+
+    <div>
+        {% for produto in produtos %}
+            <div style="border: 1px solid #ccc; margin-bottom: 20px; padding: 10px;">
+                {% if produto.imagem %}
+                    <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" width="200">
+                {% endif %}
+                <h2>{{ produto.nome }}</h2>
+                <p>{{ produto.descricao }}</p>
+                <p><strong>Preço:</strong> R$ {{ produto.preco }}</p>
+                <p><em>Categoria: {{ produto.categoria.nome }}</em></p>
+                <form action="{% url 'loja:adicionar_ao_carrinho' produto.id %}" method="POST">
+                    {% csrf_token %}
+                    <label for="quantidade-{{ produto.id }}">Quantidade:</label>
+                    <input type="number" name="quantidade" id="quantidade-{{ produto.id }}" value="1" min="1" max="{{ produto.estoque }}">
+                    <button type="submit">Adicionar ao Carrinho</button>
+                </form>
+            </div>
+        {% empty %}
+            <p>Nenhum produto cadastrado no momento. Volte em breve!</p>
+        {% endfor %}
+    </div>
+{% endblock %}

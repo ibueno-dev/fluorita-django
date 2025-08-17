@@ -1,0 +1,12 @@
+{% extends 'loja/base.html' %}
+{% block title %}Alterar Senha{% endblock %}
+
+{% block content %}
+    <h1>Alterar Senha</h1>
+    <p>Por favor, digite sua senha antiga e, em seguida, sua nova senha duas vezes.</p>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Alterar Minha Senha</button>
+    </form>
+{% endblock %}

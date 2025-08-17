@@ -1,0 +1,11 @@
+{% extends 'loja/base.html' %}
+
+{% block title %}Nossos Produtos - Fluorita{% endblock %}
+
+{% block content %}
+    <h1>Crie sua Conta</h1>
+    <form method="POST">
+        {% csrf_token %} {{ form.as_p }} <button type="submit">Cadastrar</button>
+    </form>
+    <p>Já tem uma conta? <a href="{% url 'loja:login' %}">Faça o login</a></p>
+{% endblock %}

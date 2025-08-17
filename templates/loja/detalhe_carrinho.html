@@ -1,0 +1,43 @@
+{% extends 'loja/base.html' %}
+
+{% block title %}Seu Carrinho - Fluorita{% endblock %}
+
+{% block content %}
+    <h1>Seu Carrinho de Compras</h1>
+
+    {% if carrinho_detalhado %}
+        <table border="1" style="width:100%; text-align:center;">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Preço Unit.</th>
+                    <th>Quantidade</th>
+                    <th>Subtotal</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in carrinho_detalhado %}
+                    <tr>
+                        <td>{{ item.nome }}</td>
+                        <td>R$ {{ item.preco }}</td>
+                        <td>{{ item.quantidade }}</td>
+                        <td>R$ {{ item.subtotal }}</td>
+                        <td>
+                            <a href="{% url 'loja:remover_do_carrinho' item.produto_id %}">Remover</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h2 style="text-align: right; margin-top: 20px;">Total: R$ {{ total_carrinho }}</h2>
+        <div style="text-align: right; margin-top: 20px;">
+            <a href="{% url 'loja:checkout' %}" style="padding: 10px 20px; background-color: green; color: white; text-decoration: none;">
+                Finalizar Compra
+            </a>
+        </div>
+    {% else %}
+        <p>Seu carrinho está vazio.</p>
+        <a href="{% url 'loja:lista_produtos' %}">Continuar comprando</a>
+    {% endif %}
+{% endblock %}

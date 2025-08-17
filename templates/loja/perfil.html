@@ -1,0 +1,13 @@
+{% extends 'loja/base.html' %}
+{% block title %}Meu Perfil{% endblock %}
+
+{% block content %}
+    <h1>Meu Perfil</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ u_form.as_p }}
+        <button type="submit">Atualizar Perfil</button>
+    </form>
+    <hr>
+    <a href="{% url 'loja:alterar_senha' %}">Quero alterar minha senha</a>
+{% endblock %}

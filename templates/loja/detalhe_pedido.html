@@ -1,0 +1,34 @@
+{% extends 'loja/base.html' %}
+
+{% block title %}Detalhes do Pedido #{{ pedido.id }}{% endblock %}
+
+{% block content %}
+    <h1>Detalhes do Pedido #{{ pedido.id }}</h1>
+    <p><strong>Data:</strong> {{ pedido.criado_em|date:"d/m/Y H:i" }}</p>
+    <p><strong>Status:</strong> {{ pedido.get_status_display }}</p>
+    <p><strong>Total:</strong> R$ {{ pedido.total }}</p>
+
+    <h3 style="margin-top: 30px;">Itens do Pedido</h3>
+    <table border="1" style="width:100%;">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Preço Unitário</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in pedido.itens.all %}
+                <tr>
+                    <td>{{ item.produto.nome }}</td>
+                    <td>{{ item.quantidade }}</td>
+                    <td>R$ {{ item.preco }}</td>
+                    <td>R$ {% widthratio item.preco 1 item.quantidade %}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="{% url 'loja:meus_pedidos' %}">Voltar para a lista de pedidos</a>
+{% endblock %}

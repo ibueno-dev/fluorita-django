@@ -1,0 +1,10 @@
+{% extends 'loja/base.html' %}
+{% block title %}Adicionar Endereço - Fluorita{% endblock %}
+{% block content %}
+    <h1>Adicionar Novo Endereço</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salvar Endereço</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'loja/base.html' %}
+{% block title %}Meus Endereços - Fluorita{% endblock %}
+{% block content %}
+    <h1>Meus Endereços</h1>
+    {% for endereco in enderecos %}
+        <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px;">
+            <p>{{ endereco.logradouro }}, {{ endereco.numero }}</p>
+            <p>{{ endereco.bairro }}, {{ endereco.cidade }} - {{ endereco.estado }}</p>
+            <p>CEP: {{ endereco.cep }}</p>
+            {% if endereco.padrao %}<strong>(Endereço Principal)</strong>{% endif %}
+        </div>
+    {% empty %}
+        <p>Você ainda não tem nenhum endereço cadastrado.</p>
+    {% endfor %}
+    <br>
+    <a href="{% url 'loja:adicionar_endereco' %}" style="padding: 10px; background-color: #007bff; color: white;">Adicionar Novo Endereço</a>
+{% endblock %}

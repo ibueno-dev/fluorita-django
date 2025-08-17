@@ -1,0 +1,29 @@
+{% extends 'loja/base.html' %}
+{% block title %}Checkout - Fluorita{% endblock %}
+
+{% block content %}
+    <h1>Checkout</h1>
+    <p>Por favor, confirme seu pedido e selecione um endereço de entrega.</p>
+
+    <form action="{% url 'loja:finalizar_pedido' %}" method="POST">
+        {% csrf_token %}
+
+        <h2>Selecione o Endereço de Entrega</h2>
+        {% for endereco in enderecos %}
+            <div style="border: 1px solid #ddd; padding: 10px; margin: 5px 0;">
+                <input type="radio" name="endereco_id" value="{{ endereco.id }}" id="endereco-{{ endereco.id }}" required>
+                <label for="endereco-{{ endereco.id }}">
+                    {{ endereco.logradouro }}, {{ endereco.numero }} - {{ endereco.cidade }}
+                </label>
+            </div>
+        {% empty %}
+            <p>Você não tem endereços cadastrados. <a href="{% url 'loja:adicionar_endereco' %}">Adicione um endereço</a> antes de continuar.</p>
+        {% endfor %}
+
+        <br>
+
+        {% if enderecos %}
+            <button type="submit">Confirmar e Finalizar Pedido</button>
+        {% endif %}
+    </form>
+{% endblock %}
