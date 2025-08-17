@@ -18,6 +18,11 @@
                     <a href="{% url 'loja:perfil' %}">Meu Perfil</a> |
                     <a href="{% url 'loja:meus_pedidos' %}">Meus Pedidos</a> |
                     <a href="{% url 'loja:lista_enderecos' %}">Meus Endereços</a>
+                    {# --- somente staff podera ver --- #}
+                    {% if user.is_staff %}
+                        | <a href="/admin/">Administração</a>
+                    {% endif %}
+                    {# --- FIM DO BLOCO ADICIONADO --- #}
                     <form action="{% url 'loja:logout' %}" method="POST" style="display: inline; margin-left: 10px;">
                         {% csrf_token %}
                         <button type="submit">Sair</button>

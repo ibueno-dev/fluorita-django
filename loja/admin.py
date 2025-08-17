@@ -1,5 +1,26 @@
 from django.contrib import admin
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
 from .models import Categoria, Produto, Pedido, ItemPedido
+
+#customização para ocultar password do form de exibição
+class CustomUserAdmin(UserAdmin):
+    """
+    Define uma visualização de administração customizada para o modelo User.
+    """
+    # 3. Usa a tupla 'exclude' para remover o campo 'password' do formulário
+    # A vírgula é importante para que o Python entenda que é uma tupla
+    exclude = ('password',)
+
+# 4. Desregistra a configuração padrão do User que o Django carrega
+admin.site.unregister(User)
+
+# 5. Registra o modelo User novamente, mas desta vez usando a sua classe customizada
+admin.site.register(User, CustomUserAdmin)
+
+
+
+
 
 # --- Customização para Produtos e Categorias ---
 @admin.register(Categoria)
