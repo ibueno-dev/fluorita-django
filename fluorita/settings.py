@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'fluorita.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'fluorita-dev',          # O nome do banco que você criou no Passo 1
+        'USER': 'fluorita',  # <-- SUBSTITUA pelo seu usuário do MariaDB (ex: 'root')
+        'PASSWORD': 'A1s2d3@@', # <-- SUBSTITUA pela sua senha
+        'HOST': '127.0.0.1',            # 'localhost' também funciona
+        'PORT': '3306',                 # Porta padrão do MariaDB/MySQL
     }
 }
 
