@@ -30,6 +30,7 @@ class Produto(models.Model):
     # todos os produtos nela também serão.
     categoria = models.ForeignKey(Categoria, related_name='produtos', on_delete=models.CASCADE)
     estoque = models.PositiveIntegerField(default=0, help_text='Quantidade em estoque')
+    disponivel = models.BooleanField(default=True, help_text='Indica se o produto está disponível para venda')
     # ImageField precisa da biblioteca Pillow. Instale com: pip install Pillow
     imagem = models.ImageField(upload_to='produtos/', blank=True, null=True, help_text='Imagem do produto')
 
