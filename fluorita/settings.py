@@ -110,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'UTC'
 
@@ -176,3 +176,8 @@ JAZZMIN_SETTINGS = {
         }
     }
 }
+
+# Define para onde o usuário é redirecionado após o login
+LOGIN_REDIRECT_URL = '/'
+# Redireciona para a página inicial após o logout
+LOGOUT_REDIRECT_URL = '/'
