@@ -129,3 +129,50 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+JAZZMIN_SETTINGS = {
+    # Título da janela do seu site (pode ser o que você quiser)
+    "site_title": "Fluorita Admin",
+
+    # Título na tela de login (normalmente o nome do seu site)
+    "site_header": "Fluorita",
+
+    # Logo para a tela de login (deve estar na sua pasta static)
+    # "login_logo": "path/to/my/logo.png",
+
+    # Tema
+    "theme": "flatly", # Existem vários temas, como "darkly", "cerulean", etc.
+
+    # Customizações da UI
+    "ui_tweaks": {
+        "navbar_small_text": False,
+        "footer_small_text": False,
+        "body_small_text": False,
+        "brand_small_text": False,
+        "brand_colour": "navbar-purple",
+        "accent": "accent-primary",
+        "navbar": "navbar-white navbar-light",
+        "no_navbar_border": False,
+        "navbar_fixed": True,
+        "layout_boxed": False,
+        "footer_fixed": False,
+        "sidebar_fixed": True,
+        "sidebar": "sidebar-dark-purple",
+        "sidebar_nav_small_text": False,
+        "sidebar_disable_expand": False,
+        "sidebar_nav_child_indent": False,
+        "sidebar_nav_compact_style": False,
+        "sidebar_nav_legacy_style": False,
+        "sidebar_nav_flat_style": False,
+        "theme": "default",
+        "dark_mode_theme": None,
+        "button_classes": {
+            "primary": "btn-primary",
+            "secondary": "btn-secondary",
+            "info": "btn-info",
+            "warning": "btn-warning",
+            "danger": "btn-danger",
+            "success": "btn-success"
+        }
+    }
+}
