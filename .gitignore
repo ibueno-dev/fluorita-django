@@ -1,0 +1,59 @@
+# Arquivos de Ambiente (.env)
+# Contêm senhas, chaves de API e outras informações sensíveis.
+# O arquivo .env.example, que é um modelo, NÃO é ignorado e deve ser enviado.
+.env
+.env.*
+!.env.example
+
+# Ambiente Virtual do Python
+# Contém as dependências e o interpretador, que devem ser instalados localmente.
+/.venv/
+/venv/
+/env/
+
+# Arquivos de cache e compilados do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos de log e de sistema operacional
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Arquivos temporários de editores de texto (comuns no Linux)
+*~
+*.swp
+*.swo
+
+# Banco de dados de desenvolvimento do Django
+# Não deve ser versionado, especialmente o SQLite padrão.
+db.sqlite3
+*.sqlite3
+
+# Pastas de arquivos estáticos e de mídia (uploads)
+# A pasta de uploads gerados pela aplicação não deve fazer parte do código-fonte.
+# A pasta de estáticos coletados (static_root) também não.
+/media/
+/static_root/
+/staticfiles/
+[cite_start]/uploads_privados/ # Mantendo o seu padrão [cite: 5]
+
+# Arquivos de Dump de Banco de Dados
+# Podem ser grandes e conter dados sensíveis.
+# Se precisar versionar um arquivo de schema, use uma exceção como !schema.sql
+[cite_start]*.sql  [cite: 6]
+[cite_start]*.dump  [cite: 6]
+[cite_start]*.sql.gz  [cite: 6]
+
+# Configurações de IDEs e editores
+# Não devem ser compartilhadas com outros desenvolvedores.
+[cite_start].vscode/  [cite: 7]
+.idea/
+.cache/
+.vscode/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
