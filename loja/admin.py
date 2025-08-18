@@ -1,25 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from .models import Categoria, Produto, Pedido, ItemPedido
-
-#customização para ocultar password do form de exibição
-class CustomUserAdmin(UserAdmin):
-    """
-    Define uma visualização de administração customizada para o modelo User.
-    """
-    # 3. Usa a tupla 'exclude' para remover o campo 'password' do formulário
-    # A vírgula é importante para que o Python entenda que é uma tupla
-    exclude = ('password',)
-
-# 4. Desregistra a configuração padrão do User que o Django carrega
-admin.site.unregister(User)
-
-# 5. Registra o modelo User novamente, mas desta vez usando a sua classe customizada
-admin.site.register(User, CustomUserAdmin)
-
-
-
+from django.utils.translation import gettext_lazy as _ # Importante para os fieldsets
+from .models import Categoria, Produto, ItemPedido, Pedido
 
 
 # --- Customização para Produtos e Categorias ---
@@ -65,4 +48,23 @@ class PedidoAdmin(admin.ModelAdmin):
     readonly_fields = ('usuario', 'criado_em', 'total')
 
 
-# Não precisamos mais do admin.site.register() simples, pois usamos o decorator @admin.register.
+class CustomUserAdmin(UserAdmin):
+    """
+    Substitui a classe UserAdmin padrão para remover o campo de senha.
+    """
+    # Redefinimos os fieldsets, copiando o padrão do Django mas
+    # removendo 'password' da primeira linha.
+    fieldsets = (
+        # A linha original era: (None, {'fields': ('username', 'password')})
+        (None, {'fields': ('username', 'password',)}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
+        (_('Permissions'), {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+        }),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+    )
+
+# Desregistra o UserAdmin padrão do Django
+admin.site.unregister(User)
+# Registra o User novamente com a nossa classe customizada
+admin.site.register(User, CustomUserAdmin)
