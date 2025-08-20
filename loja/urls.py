@@ -27,6 +27,7 @@ urlpatterns = [
     path('meus-enderecos/', views.lista_enderecos, name='lista_enderecos'),
     path('meus-enderecos/adicionar/', views.adicionar_endereco, name='adicionar_endereco'),
     path('checkout/', views.checkout, name='checkout'),
+    path('produto/<slug:produto_slug>/', views.detalhe_produto, name='detalhe_produto'),
     path('meu-perfil/', views.perfil, name='perfil'),
     path(
         'alterar-senha/',
