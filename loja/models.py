@@ -22,7 +22,7 @@ class Categoria(models.Model):
 # Model para os Produtos
 class Produto(models.Model):
     nome = models.CharField(max_length=200, help_text='Nome do produto')
-    slug = models.SlugField(max_length=200, unique=True, blank=True)
+    slug = models.SlugField(max_length=200, unique=True)
     descricao = models.TextField(help_text='Descrição detalhada do produto')
     # Usamos DecimalField para preços para evitar problemas de arredondamento
     preco = models.DecimalField(max_digits=10, decimal_places=2, help_text='Preço do produto')
