@@ -5,6 +5,21 @@
     <title>{% block title %}Fluorita{% endblock %}</title>
 </head>
 <body>
+    {% if messages %}
+        <div class="messages-container" style="padding: 10px 20px; text-align: center;">
+            {% for message in messages %}
+                {# A tag da mensagem (success, error, info) é usada para definir a cor de fundo #}
+                <div class="message {{ message.tags }}"
+                     style="padding: 15px; margin-bottom: 15px; border-radius: 5px; color: white;
+                            {% if message.tags == 'success' %}background-color: #28a745;
+                            {% elif message.tags == 'error' %}background-color: #dc3545;
+                            {% else %}background-color: #007bff;
+                            {% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
     <header>
         <nav style="background-color: #f2f2f2; padding: 10px; margin-bottom: 20px;">
             <a href="{% url 'loja:home' %}">Página Inicial</a> |
