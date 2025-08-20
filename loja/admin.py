@@ -16,6 +16,8 @@ class ProdutoAdmin(admin.ModelAdmin):
     list_display = ('nome', 'categoria', 'preco', 'estoque', 'disponivel')
     list_filter = ('categoria',)
     search_fields = ('nome', 'descricao')
+    # Para preencher o slug automaticamente
+    prepopulated_fields = {'slug': ('nome',)}
 
 # --- Customização para Pedidos ---
 

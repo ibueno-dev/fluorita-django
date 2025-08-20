@@ -243,3 +243,11 @@ def perfil(request):
     }
     return render(request, 'loja/perfil.html', context)
 
+def detalhe_produto(request, produto_slug):
+    # Busca o produto pelo slug ou retorna um erro 404 (Página não encontrada)
+    produto = get_object_or_404(Produto, slug=produto_slug)
+    context = {
+        'produto': produto
+    }
+    return render(request, 'loja/detalhe_produto.html', context)
+

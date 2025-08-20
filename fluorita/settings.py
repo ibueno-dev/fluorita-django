@@ -181,3 +181,8 @@ JAZZMIN_SETTINGS = {
 LOGIN_REDIRECT_URL = '/'
 # Redireciona para a página inicial após o logout
 LOGOUT_REDIRECT_URL = '/'
+
+# URL base para servir os arquivos de mídia enviados pelos usuários
+MEDIA_URL = '/media/'
+# Caminho no sistema de arquivos onde os arquivos de mídia serão armazenados
+MEDIA_ROOT = BASE_DIR / 'media/'

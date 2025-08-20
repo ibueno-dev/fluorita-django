@@ -41,6 +41,7 @@ db.sqlite3
 /staticfiles/
 [cite_start]/uploads_privados/ # Mantendo o seu padrão [cite: 5]
 /produtos/
+/loja/migrations/
 
 # Arquivos de Dump de Banco de Dados
 # Podem ser grandes e conter dados sensíveis.
