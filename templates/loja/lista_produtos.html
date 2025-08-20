@@ -8,10 +8,12 @@
     <div>
         {% for produto in produtos %}
             <div style="border: 1px solid #ccc; margin-bottom: 20px; padding: 10px;">
-                {% if produto.imagem %}
-                    <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" width="200">
-                {% endif %}
-                <h2>{{ produto.nome }}</h2>
+                <a href="{% url 'detalhe_produto' produto.slug %}" style="text-decoration: none; color: inherit;">
+                    {% if produto.imagem %}
+                        <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" width="200">
+                    {% endif %}
+                    <h2>{{ produto.nome }}</h2>
+                </a>
                 <p>{{ produto.descricao }}</p>
                 <p><strong>Preço:</strong> R$ {{ produto.preco }}</p>
                 <p><em>Categoria: {{ produto.categoria.nome }}</em></p>
