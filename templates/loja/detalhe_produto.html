@@ -1,4 +1,4 @@
-{% extends 'loja/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}{{ produto.nome }} - Fluorita{% endblock %}
 
@@ -18,7 +18,7 @@
 
             <hr>
 
-            <form action="{% url 'adicionar_ao_carrinho' produto.id %}" method="POST">
+            <form action="{% url 'loja:adicionar_ao_carrinho' produto.id %}" method="POST">
                 {% csrf_token %}
                 <label for="quantidade-{{ produto.id }}">Quantidade:</label>
                 <input type="number" name="quantidade" id="quantidade-{{ produto.id }}" value="1" min="1" max="{{ produto.estoque }}">
@@ -27,5 +27,5 @@
         </div>
     </div>
     <br>
-    <a href="{% url 'lista_produtos' %}">Voltar para a lista de produtos</a>
+    <a href="{% url 'loja:lista_produtos' %}">Voltar para a lista de produtos</a>
 {% endblock %}
