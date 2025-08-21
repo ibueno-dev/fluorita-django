@@ -1,0 +1,19 @@
+Olá, {{ pedido.usuario.first_name|default:pedido.usuario.username }}!
+
+Obrigado por sua compra na Fluorita.
+Seu pedido nº {{ pedido.id }} foi confirmado com sucesso.
+
+RESUMO DO PEDIDO:
+{% for item in pedido.itens.all %}
+- {{ item.quantidade }}x {{ item.produto.nome }} (R$ {{ item.preco }}) - Subtotal: R$ {% item.subtotal %}
+{% endfor %}
+
+VALOR TOTAL: R$ {{ pedido.total }}
+
+Endereço de Entrega:
+{{ pedido.endereco_entrega.logradouro }}, {{ pedido.endereco_entrega.numero }}
+{{ pedido.endereco_entrega.cidade }} - {{ pedido.endereco_entrega.estado }}
+CEP: {{ pedido.endereco_entrega.cep }}
+
+Atenciosamente,
+Equipe Fluorita

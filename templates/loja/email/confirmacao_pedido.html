@@ -1,0 +1,34 @@
+<h3>Olá, {{ pedido.usuario.first_name|default:pedido.usuario.username }}!</h3>
+<p>Obrigado por sua compra na Fluorita. Seu pedido <strong>nº {{ pedido.id }}</strong> foi confirmado com sucesso.</p>
+<hr>
+<h4>Resumo do Pedido</h4>
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Preço Unitário</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in pedido.itens.all %}
+        <tr>
+            <td>{{ item.produto.nome }}</td>
+            <td>{{ item.quantidade }}</td>
+            <td>R$ {{ item.preco }}</td>
+            <td>R$ {{ item.subtotal }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h3>Valor Total: R$ {{ pedido.total }}</h3>
+<hr>
+<h4>Endereço de Entrega</h4>
+<p>
+    {{ pedido.endereco_entrega.logradouro }}, {{ pedido.endereco_entrega.numero }}<br>
+    {{ pedido.endereco_entrega.cidade }} - {{ pedido.endereco_entrega.estado }}<br>
+    CEP: {{ pedido.endereco_entrega.cep }}
+</p>
+<br>
+<p>Atenciosamente,<br>Equipe Fluorita</p>

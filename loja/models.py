@@ -90,4 +90,8 @@ class ItemPedido(models.Model):
     def __str__(self):
         return f"{self.quantidade}x {self.produto.nome} no Pedido {self.pedido.id}"
 
+    @property
+    def subtotal(self):
+        return self.preco * self.quantidade
+
 

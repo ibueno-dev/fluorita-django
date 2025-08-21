@@ -6,6 +6,10 @@ from decimal import Decimal
 from django.contrib.auth.decorators import login_required
 from .models import Pedido, ItemPedido
 from .forms import EnderecoForm, UserUpdateForm
+from django.db import transaction
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 # Esta é a função que a nossa URL chama
@@ -188,42 +192,75 @@ def finalizar_pedido(request):
         endereco_selecionado = Endereco.objects.get(id=endereco_id, usuario=request.user)
     except Endereco.DoesNotExist:
         messages.error(request, "Endereço inválido.")
+        return redirect('checkout')
+
+
+    try:
+        # A transação garante que todas as operações de banco de dados abaixo
+        # ou funcionam todas juntas, ou nenhuma delas funciona.
+        # Isso evita inconsistências (ex: criar pedido mas não atualizar o estoque).
+        with transaction.atomic():
+            # PASSO 1: Verificação de estoque ANTES de criar o pedido
+            for produto_id, item_data in carrinho.items():
+                produto = get_object_or_404(Produto, id=produto_id)
+                quantidade_pedida = int(item_data['quantidade'])
+
+                if produto.estoque < quantidade_pedida:
+                    # Se um item não tiver estoque, interrompe tudo
+                    messages.error(request,
+                                   f"Desculpe, não temos estoque suficiente para '{produto.nome}'. Disponível: {produto.estoque}.")
+                    return redirect('loja:detalhe_carrinho')  # Redireciona de volta para o carrinho
+
+            # Se o loop acima terminar sem problemas, significa que há estoque para tudo.
+            # Agora podemos continuar com a criação do pedido.
+
+            # ... (a lógica de cálculo do total continua a mesma) ...
+            total_carrinho = Decimal('0.00')
+            for produto_id, item_data in carrinho.items():
+                total_carrinho += Decimal(item_data['preco']) * int(item_data['quantidade'])
+
+            # Cria o objeto Pedido
+            pedido = Pedido.objects.create(
+                usuario=request.user,
+                total=total_carrinho,
+                endereco_entrega=endereco_selecionado
+            )
+
+            # Cria os objetos ItemPedido E ATUALIZA o estoque
+            for produto_id, item_data in carrinho.items():
+                produto = get_object_or_404(Produto, id=produto_id)
+                quantidade_pedida = int(item_data['quantidade'])
+
+                ItemPedido.objects.create(
+                    pedido=pedido,
+                    produto=produto,
+                    preco=Decimal(item_data['preco']),
+                    quantidade=quantidade_pedida
+                )
+
+                # PASSO 2: Dedução do estoque
+                produto.estoque -= quantidade_pedida
+                produto.save()  # Salva a nova quantidade no banco
+
+    except Exception as e:
+        # Em caso de qualquer outro erro inesperado, avisa o usuário.
+        messages.error(request, f"Ocorreu um erro ao processar seu pedido: {e}")
         return redirect('loja:checkout')
 
-    # ... (a lógica de cálculo do total e preparação dos itens continua a mesma) ...
-    total_carrinho = Decimal('0.00')
-    itens_para_salvar = []
-    for produto_id, item_data in carrinho.items():
-        preco_item = Decimal(item_data['preco'])
-        quantidade_item = int(item_data['quantidade'])
-        subtotal = preco_item * quantidade_item
-        total_carrinho += subtotal
-        produto = get_object_or_404(Produto, id=produto_id)
-        itens_para_salvar.append({
-            'produto': produto,
-            'preco': preco_item,
-            'quantidade': quantidade_item
-        })
+        # --- FIM DA NOVA LÓGICA ---
 
-    # Cria o objeto Pedido, agora com o endereço
-    pedido = Pedido.objects.create(
-        usuario=request.user,
-        total=total_carrinho,
-        endereco_entrega=endereco_selecionado # <<< CAMPO NOVO AQUI
-    )
-
-    # ... (a lógica para criar os ItemPedido e limpar o carrinho continua a mesma) ...
-    for item in itens_para_salvar:
-        ItemPedido.objects.create(
-            pedido=pedido,
-            produto=item['produto'],
-            preco=item['preco'],
-            quantidade=item['quantidade']
-        )
+        # Limpa o carrinho da sessão
     del request.session['carrinho']
 
+    # Envia o e-mail de confirmação
+    try:
+        enviar_email_confirmacao_pedido(pedido)
+    except Exception as e:
+        # Se o envio de e-mail falhar, não quebra o site, apenas avisa no console.
+        print(f"Erro ao enviar e-mail de confirmação: {e}")
+
     messages.success(request, f'Pedido #{pedido.id} realizado com sucesso!')
-    return redirect('loja:meus_pedidos') # Redireciona para a lista de pedidos
+    return redirect('loja:meus_pedidos')
 
 @login_required
 def perfil(request):
@@ -251,3 +288,19 @@ def detalhe_produto(request, produto_slug):
     }
     return render(request, 'loja/detalhe_produto.html', context)
 
+def enviar_email_confirmacao_pedido(pedido):
+    subject = f'Confirmação do Pedido #{pedido.id} - Loja Fluorita'
+
+    # O e-mail do destinatário é o e-mail do usuário que fez o pedido
+    recipient_list = [pedido.usuario.email]
+
+    # Renderiza o template HTML para uma string
+    html_message = render_to_string('loja/email/confirmacao_pedido.html', {'pedido': pedido})
+
+    # Cria a versão em texto puro removendo as tags HTML
+    plain_message = strip_tags(html_message)
+
+    # E-mail do remetente (pode ser qualquer coisa nesta fase)
+    from_email = 'nao-responda@fluorita.com'
+
+    send_mail(subject, plain_message, from_email, recipient_list, html_message=html_message)
