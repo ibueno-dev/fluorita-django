@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from .models import Pedido, ItemPedido
 from .forms import EnderecoForm, UserUpdateForm
 from django.db import transaction
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 # Esta é a função que a nossa URL chama
@@ -278,3 +281,19 @@ def detalhe_produto(request, produto_slug):
     }
     return render(request, 'loja/detalhe_produto.html', context)
 
+def enviar_email_confirmacao_pedido(pedido):
+    subject = f'Confirmação do Pedido #{pedido.id} - Loja Fluorita'
+
+    # O e-mail do destinatário é o e-mail do usuário que fez o pedido
+    recipient_list = [pedido.usuario.email]
+
+    # Renderiza o template HTML para uma string
+    html_message = render_to_string('loja/email/confirmacao_pedido.html', {'pedido': pedido})
+
+    # Cria a versão em texto puro removendo as tags HTML
+    plain_message = strip_tags(html_message)
+
+    # E-mail do remetente (pode ser qualquer coisa nesta fase)
+    from_email = 'nao-responda@fluorita.com'
+
+    send_mail(subject, plain_message, from_email, recipient_list, html_message=html_message)
