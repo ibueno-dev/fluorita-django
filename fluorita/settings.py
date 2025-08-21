@@ -186,3 +186,6 @@ LOGOUT_REDIRECT_URL = '/'
 MEDIA_URL = '/media/'
 # Caminho no sistema de arquivos onde os arquivos de mídia serão armazenados
 MEDIA_ROOT = BASE_DIR / 'media/'
+
+# Direciona a saída de e-mails para o console
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
