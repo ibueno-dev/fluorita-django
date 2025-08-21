@@ -5,7 +5,7 @@ Seu pedido nº {{ pedido.id }} foi confirmado com sucesso.
 
 RESUMO DO PEDIDO:
 {% for item in pedido.itens.all %}
-- {{ item.quantidade }}x {{ item.produto.nome }} (R$ {{ item.preco }}) - Subtotal: R$ {% widthratio item.preco 1 item.quantidade %}
+- {{ item.quantidade }}x {{ item.produto.nome }} (R$ {{ item.preco }}) - Subtotal: R$ {% item.subtotal %}
 {% endfor %}
 
 VALOR TOTAL: R$ {{ pedido.total }}

@@ -17,7 +17,7 @@
             <td>{{ item.produto.nome }}</td>
             <td>{{ item.quantidade }}</td>
             <td>R$ {{ item.preco }}</td>
-            <td>R$ {% widthratio item.preco 1 item.quantidade %}</td>
+            <td>R$ {% item.subtotal %}</td>
         </tr>
         {% endfor %}
     </tbody>
