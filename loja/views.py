@@ -252,6 +252,13 @@ def finalizar_pedido(request):
         # Limpa o carrinho da sessão
     del request.session['carrinho']
 
+    # Envia o e-mail de confirmação
+    try:
+        enviar_email_confirmacao_pedido(pedido)
+    except Exception as e:
+        # Se o envio de e-mail falhar, não quebra o site, apenas avisa no console.
+        print(f"Erro ao enviar e-mail de confirmação: {e}")
+
     messages.success(request, f'Pedido #{pedido.id} realizado com sucesso!')
     return redirect('loja:meus_pedidos')
 
