@@ -58,13 +58,13 @@ Você precisa criar um banco de dados e um usuário dedicado para o projeto.
 
     ```sql
     -- Cria a base de dados com suporte a caracteres UTF-8 (importante para acentuação)
-    CREATE DATABASE fluorita_dev CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    CREATE DATABASE fluorita-dev CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
     -- Cria o usuário 'fluorita' que só pode se conectar localmente
     CREATE USER 'fluorita'@'localhost' IDENTIFIED BY 'sua-senha-forte-aqui';
 
     -- Concede todos os privilégios ao usuário 'fluorita' sobre a base de dados 'fluorita-dev'
-    GRANT ALL PRIVILEGES ON fluorita_dev.* TO 'fluorita'@'localhost';
+    GRANT ALL PRIVILEGES ON fluorita-dev.* TO 'fluorita'@'localhost';
 
     -- Aplica as alterações de privilégios
     FLUSH PRIVILEGES;
