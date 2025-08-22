@@ -29,6 +29,7 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path('produto/<slug:produto_slug>/', views.detalhe_produto, name='detalhe_produto'),
     path('meu-perfil/', views.perfil, name='perfil'),
+    path('produto/<slug:produto_slug>/avaliar/', views.adicionar_avaliacao, name='adicionar_avaliacao'),
     path(
         'alterar-senha/',
         auth_views.PasswordChangeView.as_view(

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _ # Importante para os fieldsets
-from .models import Categoria, Produto, ItemPedido, Pedido
+from .models import Categoria, Produto, ItemPedido, Pedido, Avaliacao
 
 
 # --- Customização para Produtos e Categorias ---
@@ -65,6 +65,14 @@ class CustomUserAdmin(UserAdmin):
         }),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
+
+@admin.register(Avaliacao)
+class AvaliacaoAdmin(admin.ModelAdmin):
+    list_display = ('produto', 'usuario', 'nota', 'criado_em')
+    list_filter = ('nota', 'criado_em')
+    search_fields = ('produto__nome', 'usuario__username', 'comentario')
+
+
 
 # Desregistra o UserAdmin padrão do Django
 admin.site.unregister(User)

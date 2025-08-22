@@ -149,7 +149,7 @@ O projeto possui uma base sólida, mas ainda há espaço para melhorias e novas 
 -   [ ] **Integração de Gateway de Pagamento:** Implementar a comunicação com APIs como Mercado Pago ou PagSeguro.
 -   [ ] **Estilização do Frontend:** Aplicar CSS e/ou um framework (como Bootstrap) para criar uma interface visualmente atraente.
 -   [ ] **Ícones e Melhorias Visuais:** Utilizar bibliotecas como [Font Awesome](https://fontawesome.com/) para ícones.
--   [ ] **Sistema de Avaliações:** Permitir que os clientes avaliem os produtos.
+-   [X] **Sistema de Avaliações:** Permitir que os clientes avaliem os produtos.
 -   [ ] **Carrinho de Compras Dinâmico:** Usar AJAX/JavaScript para que o carrinho seja atualizado sem recarregar a página.
 -   [ ] **Deployment:** Preparar e implantar o projeto em um servidor de produção (ex: Heroku, DigitalOcean).
 

@@ -95,3 +95,25 @@ class ItemPedido(models.Model):
         return self.preco * self.quantidade
 
 
+# Classe para avaliação dos clientes
+class Avaliacao(models.Model):
+    NOTA_CHOICES = (
+        (1, '★☆☆☆☆'),
+        (2, '★★☆☆☆'),
+        (3, '★★★☆☆'),
+        (4, '★★★★☆'),
+        (5, '★★★★★'),
+    )
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='avaliacoes')
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    nota = models.IntegerField(choices=NOTA_CHOICES)
+    comentario = models.TextField(max_length=500)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # Garante que um usuário só pode fazer uma avaliação por produto
+        unique_together = ('produto', 'usuario')
+        ordering = ['-criado_em'] # Ordena da mais recente para a mais antiga
+
+    def __str__(self):
+        return f'Avaliação de {self.usuario.username} para {self.produto.nome}'

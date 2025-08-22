@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Produto, Endereco
+from .models import Produto, Pedido, ItemPedido, Endereco, Avaliacao
+from .forms import EnderecoForm, UserUpdateForm, AvaliacaoForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from decimal import Decimal
 from django.contrib.auth.decorators import login_required
-from .models import Pedido, ItemPedido
-from .forms import EnderecoForm, UserUpdateForm
 from django.db import transaction
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -283,8 +282,31 @@ def perfil(request):
 def detalhe_produto(request, produto_slug):
     # Busca o produto pelo slug ou retorna um erro 404 (Página não encontrada)
     produto = get_object_or_404(Produto, slug=produto_slug)
+    # adiciono campos para avaliação
+    avaliacoes = produto.avaliacoes.all()
+    avaliacao_form = AvaliacaoForm()
+
+
+    pode_avaliar = False
+    if request.user.is_authenticated:
+        # Verifica se o usuário comprou o produto e o pedido foi entregue
+        comprou_produto = Pedido.objects.filter(
+            usuario=request.user,
+            itens__produto=produto,
+            status='entregue'
+        ).exists()
+
+        # Verifica se o usuário ainda não avaliou o produto
+        ja_avaliou = Avaliacao.objects.filter(produto=produto, usuario=request.user).exists()
+
+        if comprou_produto and not ja_avaliou:
+            pode_avaliar = True
+
     context = {
-        'produto': produto
+        'produto': produto,
+        'avaliacoes': avaliacoes,
+        'pode_avaliar': pode_avaliar,
+        'avaliacao_form': avaliacao_form,
     }
     return render(request, 'loja/detalhe_produto.html', context)
 
@@ -304,3 +326,22 @@ def enviar_email_confirmacao_pedido(pedido):
     from_email = 'nao-responda@fluorita.com'
 
     send_mail(subject, plain_message, from_email, recipient_list, html_message=html_message)
+
+
+@login_required
+def adicionar_avaliacao(request, produto_slug):
+    produto = get_object_or_404(Produto, slug=produto_slug)
+    if request.method == 'POST':
+        form = AvaliacaoForm(request.POST)
+        if form.is_valid():
+            # Verifica se o usuário já avaliou este produto
+            if Avaliacao.objects.filter(produto=produto, usuario=request.user).exists():
+                messages.error(request, 'Você já avaliou este produto.')
+            else:
+                avaliacao = form.save(commit=False)
+                avaliacao.produto = produto
+                avaliacao.usuario = request.user
+                avaliacao.save()
+                messages.success(request, 'Obrigado pela sua avaliação!')
+    # Redireciona de volta para a página do produto, seja sucesso ou falha
+    return redirect('loja:detalhe_produto', produto_slug=produto.slug)
