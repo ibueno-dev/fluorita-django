@@ -282,8 +282,31 @@ def perfil(request):
 def detalhe_produto(request, produto_slug):
     # Busca o produto pelo slug ou retorna um erro 404 (Página não encontrada)
     produto = get_object_or_404(Produto, slug=produto_slug)
+    # adiciono campos para avaliação
+    avaliacoes = produto.avaliacoes.all()
+    avaliacao_form = AvaliacaoForm()
+
+
+    pode_avaliar = False
+    if request.user.is_authenticated:
+        # Verifica se o usuário comprou o produto e o pedido foi entregue
+        comprou_produto = Pedido.objects.filter(
+            usuario=request.user,
+            itens__produto=produto,
+            status='entregue'
+        ).exists()
+
+        # Verifica se o usuário ainda não avaliou o produto
+        ja_avaliou = Avaliacao.objects.filter(produto=produto, usuario=request.user).exists()
+
+        if comprou_produto and not ja_avaliou:
+            pode_avaliar = True
+
     context = {
-        'produto': produto
+        'produto': produto,
+        'avaliacoes': avaliacoes,
+        'pode_avaliar': pode_avaliar,
+        'avaliacao_form': avaliacao_form,
     }
     return render(request, 'loja/detalhe_produto.html', context)
 
