@@ -15,16 +15,13 @@
             <p><small>Categoria: {{ produto.categoria.nome }}</small></p>
             <p style="font-size: 24px; color: #333;"><strong>R$ {{ produto.preco }}</strong></p>
             <p>{{ produto.descricao }}</p>
-
-            <hr>
             <hr style="margin-top: 40px;">
-
             <div class="avaliacoes-section">
                 <h2>Avaliações de Clientes</h2>
 
                 {% if pode_avaliar %}
                     <h3>Deixe sua avaliação</h3>
-                    <form action="{% url 'adicionar_avaliacao' produto.slug %}" method="POST">
+                    <form action="{% url 'loja:adicionar_avaliacao' produto.slug %}" method="POST">
                         {% csrf_token %}
                         {{ avaliacao_form.as_p }}
                         <button type="submit">Enviar Avaliação</button>
@@ -33,7 +30,7 @@
                 {% elif request.user.is_authenticated %}
                      <p><i>Você precisa ter comprado e recebido este produto para poder avaliá-lo.</i></p>
                 {% else %}
-                     <p><i><a href="{% url 'login' %}?next={{ request.path }}">Faça o login</a> para avaliar este produto.</i></p>
+                     <p><i><a href="{% url 'loja:login' %}?next={{ request.path }}">Faça o login</a> para avaliar este produto.</i></p>
                 {% endif %}
 
                 {% for avaliacao in avaliacoes %}
@@ -46,7 +43,7 @@
                     <p>Este produto ainda não tem avaliações. Seja o primeiro a avaliar!</p>
                 {% endfor %}
             </div>
-
+            <hr>
             <form action="{% url 'loja:adicionar_ao_carrinho' produto.id %}" method="POST">
                 {% csrf_token %}
                 <label for="quantidade-{{ produto.id }}">Quantidade:</label>
