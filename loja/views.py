@@ -9,6 +9,7 @@ from django.db import transaction
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.db.models import Avg, Count
 
 
 # Esta é a função que a nossa URL chama
@@ -17,7 +18,11 @@ def home(request):
 
 def lista_produtos(request):
     # 1. A consulta ao banco de dados: Pega TODOS os objetos do modelo Produto.
-    produtos = Produto.objects.all()
+    # produtos = Produto.objects.all() subistituo para pegar a media de avaliação e contagem
+    produtos = Produto.objects.annotate(
+        media_avaliacoes=Avg('avaliacoes__nota'),
+        contagem_avaliacoes=Count('avaliacoes')
+    ).all()
 
     # 2. O contexto: Um dicionário que leva os dados para o template.
     # A chave 'produtos' será o nome da variável no HTML.

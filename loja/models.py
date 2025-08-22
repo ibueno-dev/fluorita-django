@@ -1,9 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User # Importa o modelo de usuário
-from decimal import Decimal
-
-from django.db import models
-from django.contrib.auth.models import User # Importa o modelo de usuário
+from django.db.models import Avg
 from decimal import Decimal
 
 
@@ -37,6 +34,18 @@ class Produto(models.Model):
 
     def __str__(self):
         return self.nome
+    # trabalhando com as avaliaões
+    def media_avaliacoes(self):
+        # Calcula a média das 'notas' de todas as avaliações relacionadas a este produto.
+        # O aggregate retorna um dicionário, ex: {'media': 4.5}
+        media = self.avaliacoes.all().aggregate(media=Avg('nota'))
+        # Se não houver avaliações, a média será None. Nesse caso, retornamos 0.
+        return media['media'] or 0
+
+    # trabalhando com as avaliaões
+    def contagem_avaliacoes(self):
+        # Simplesmente conta quantas avaliações este produto tem.
+        return self.avaliacoes.count()
 
 class Endereco(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enderecos')
