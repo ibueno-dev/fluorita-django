@@ -12,6 +12,13 @@
 
         <div style="flex: 1;">
             <h1>{{ produto.nome }}</h1>
+            {% if produto.contagem_avaliacoes > 0 %}
+                <p>
+                    <strong>Avaliação:</strong>
+                    {{ produto.media_avaliacoes|floatformat:1 }} / 5
+                    (baseado em {{ produto.contagem_avaliacoes }} avaliação{{ produto.contagem_avaliacoes|pluralize }})
+                </p>
+            {% endif %}
             <p><small>Categoria: {{ produto.categoria.nome }}</small></p>
             <p style="font-size: 24px; color: #333;"><strong>R$ {{ produto.preco }}</strong></p>
             <p>{{ produto.descricao }}</p>
