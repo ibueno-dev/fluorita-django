@@ -17,6 +17,35 @@
             <p>{{ produto.descricao }}</p>
 
             <hr>
+            <hr style="margin-top: 40px;">
+
+            <div class="avaliacoes-section">
+                <h2>Avaliações de Clientes</h2>
+
+                {% if pode_avaliar %}
+                    <h3>Deixe sua avaliação</h3>
+                    <form action="{% url 'adicionar_avaliacao' produto.slug %}" method="POST">
+                        {% csrf_token %}
+                        {{ avaliacao_form.as_p }}
+                        <button type="submit">Enviar Avaliação</button>
+                    </form>
+                    <hr>
+                {% elif request.user.is_authenticated %}
+                     <p><i>Você precisa ter comprado e recebido este produto para poder avaliá-lo.</i></p>
+                {% else %}
+                     <p><i><a href="{% url 'login' %}?next={{ request.path }}">Faça o login</a> para avaliar este produto.</i></p>
+                {% endif %}
+
+                {% for avaliacao in avaliacoes %}
+                    <div class="avaliacao" style="border-bottom: 1px solid #eee; padding: 15px 0;">
+                        <strong>Nota: {{ avaliacao.get_nota_display }}</strong>
+                        <p>"{{ avaliacao.comentario }}"</p>
+                        <small>Por: {{ avaliacao.usuario.username }} em {{ avaliacao.criado_em|date:"d/m/Y" }}</small>
+                    </div>
+                {% empty %}
+                    <p>Este produto ainda não tem avaliações. Seja o primeiro a avaliar!</p>
+                {% endfor %}
+            </div>
 
             <form action="{% url 'loja:adicionar_ao_carrinho' produto.id %}" method="POST">
                 {% csrf_token %}
