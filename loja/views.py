@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Produto, Endereco
+from .models import Produto, Pedido, ItemPedido, Endereco, Avaliacao
+from .forms import EnderecoForm, UserUpdateForm, AvaliacaoForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from decimal import Decimal
 from django.contrib.auth.decorators import login_required
-from .models import Pedido, ItemPedido
-from .forms import EnderecoForm, UserUpdateForm
 from django.db import transaction
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -304,3 +303,22 @@ def enviar_email_confirmacao_pedido(pedido):
     from_email = 'nao-responda@fluorita.com'
 
     send_mail(subject, plain_message, from_email, recipient_list, html_message=html_message)
+
+
+@login_required
+def adicionar_avaliacao(request, produto_slug):
+    produto = get_object_or_404(Produto, slug=produto_slug)
+    if request.method == 'POST':
+        form = AvaliacaoForm(request.POST)
+        if form.is_valid():
+            # Verifica se o usuário já avaliou este produto
+            if Avaliacao.objects.filter(produto=produto, usuario=request.user).exists():
+                messages.error(request, 'Você já avaliou este produto.')
+            else:
+                avaliacao = form.save(commit=False)
+                avaliacao.produto = produto
+                avaliacao.usuario = request.user
+                avaliacao.save()
+                messages.success(request, 'Obrigado pela sua avaliação!')
+    # Redireciona de volta para a página do produto, seja sucesso ou falha
+    return redirect('loja:detalhe_produto', produto_slug=produto.slug)
