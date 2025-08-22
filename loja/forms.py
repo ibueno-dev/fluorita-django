@@ -1,5 +1,5 @@
 from django import forms
-from .models import Endereco
+from .models import Endereco, Avaliacao
 from django.contrib.auth.models import User
 
 
@@ -19,3 +19,13 @@ class UserUpdateForm(forms.ModelForm):
         # Define os campos do modelo que queremos no formulário
         fields = ['username', 'email', 'first_name', 'last_name']
 
+
+# Novo formulário para Avaliações
+class AvaliacaoForm(forms.ModelForm):
+    class Meta:
+        model = Avaliacao
+        # Apenas os campos que o usuário preencherá
+        fields = ['nota', 'comentario']
+        widgets = {
+            'comentario': forms.Textarea(attrs={'rows': 4}),
+        }
